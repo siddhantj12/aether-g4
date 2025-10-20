@@ -14,8 +14,16 @@ export function PreferencesModal({ open, onClose }: PreferencesModalProps) {
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <div className="w-full max-w-md rounded-3xl glass-surface-bright p-6 shadow-2xl">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+      onClick={onClose}
+      style={{ pointerEvents: 'auto' }}
+    >
+      <div 
+        className="w-full max-w-md rounded-3xl glass-surface-bright p-6 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+        style={{ pointerEvents: 'auto' }}
+      >
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-light text-neon-white">Preferences</h2>

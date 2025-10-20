@@ -237,3 +237,49 @@ body {
   color: #ffffff;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5);
 }
+
+/* Ensure all interactive elements are clickable */
+button,
+input,
+select,
+textarea,
+label,
+[role="button"],
+.glass-surface,
+.glass-surface-bright {
+  pointer-events: auto;
+}
+
+/* Styling for range inputs */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-accent-cyan);
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--color-accent-cyan);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-accent-cyan);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 10px var(--color-accent-cyan);
+}
+
+/* Checkbox styling */
+input[type="checkbox"] {
+  cursor: pointer;
+}

@@ -42,9 +42,9 @@ export function TimerRing({ progress, phase, isRunning }: TimerRingProps) {
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
-          className="transition-all duration-1000 ease-linear"
           style={{
             filter: `drop-shadow(0 0 12px ${phaseColors[phase]}) drop-shadow(0 0 24px ${phaseColors[phase]}80)`,
+            transition: 'stroke-dashoffset 1s linear',
           }}
         />
       </svg>
