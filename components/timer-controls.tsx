@@ -19,14 +19,14 @@ export function TimerControls({ isRunning, onStart, onPause, onReset, onFocusSta
         style={{
           background: "rgba(255, 255, 255, 0.1)",
           borderColor: "rgba(255, 255, 255, 0.2)",
-          boxShadow: "0 0 20px rgba(0, 217, 255, 0.3), 0 0 40px rgba(0, 217, 255, 0.1)",
+          boxShadow: "0 0 20px rgba(255, 0, 0, 0.5), 0 0 40px rgba(255, 0, 0, 0.25)",
         }}
         aria-label={isRunning ? "Pause" : "Start"}
       >
         {isRunning ? (
-          <Pause className="w-6 h-6 text-[#00d9ff]" fill="currentColor" />
+          <Pause className="w-6 h-6 text-[#ff0000]" fill="currentColor" />
         ) : (
-          <Play className="w-6 h-6 text-[#00d9ff] ml-1" fill="currentColor" />
+          <Play className="w-6 h-6 text-[#ff0000] ml-1" fill="currentColor" />
         )}
       </button>
       {onFocusStart && (

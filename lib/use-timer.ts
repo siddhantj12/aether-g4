@@ -47,14 +47,16 @@ export function useTimer() {
 
     if (phase === "focus") {
       newSessionCount += 1
-      incrementPomodoro()
-      // Add actual minutes based on focusDuration into stats
+      // Add minutes actually completed in this focus session
       try {
+        const secondsCompleted = getDuration("focus") - timeLeft
+        const minutesCompleted = Math.round(secondsCompleted / 60)
         const today = new Date().toDateString()
         const stored = localStorage.getItem("aether-stats") || localStorage.getItem("flow-stats")
         const stats = stored ? JSON.parse(stored) : {}
         const todayStats = stats[today] || { pomodoros: 0, minutes: 0 }
-        todayStats.minutes = (todayStats.minutes || 0) + preferences.focusDuration
+        todayStats.pomodoros += 1
+        todayStats.minutes = (todayStats.minutes || 0) + minutesCompleted
         stats[today] = todayStats
         localStorage.setItem("aether-stats", JSON.stringify(stats))
       } catch {}
