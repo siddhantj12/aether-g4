@@ -14,7 +14,7 @@ export default function Home() {
     <main className="min-h-screen flex flex-col items-center justify-center p-4 relative">
       {/* Header */}
       <div className="absolute top-6 left-0 right-0 flex items-center justify-between px-6 max-w-4xl mx-auto">
-        <h1 className="text-2xl font-light tracking-wide text-neon-white">Flow</h1>
+        <h1 className="text-2xl font-light tracking-wide text-neon-white">Aether, your free companion</h1>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setView(view === "timer" ? "stats" : "timer")}
