@@ -37,11 +37,18 @@ jobs:
           name: Aether-dmg
           path: src-tauri/target/release/bundle/dmg/*.dmg
 
+      - name: Upload APP ZIP artifact (fallback)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Aether-app-zip
+          path: src-tauri/target/release/bundle/macos/Aether.app.zip
+
       - name: Upload DMG to release
         uses: softprops/action-gh-release@v2
         with:
           files: |
             src-tauri/target/release/bundle/dmg/*.dmg
+            src-tauri/target/release/bundle/macos/Aether.app.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
