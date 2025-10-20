@@ -12,9 +12,9 @@ export const metadata: Metadata = {
   description: 'Aether – your matte-dark focus companion',
   generator: 'Aether',
   icons: {
-    icon: '/aethericon.png',
-    shortcut: '/aethericon.png',
-    apple: '/aethericon.png',
+    icon: '/icon.png',
+    shortcut: '/favicon.png',
+    apple: '/apple-icon.png',
   },
 }
 
