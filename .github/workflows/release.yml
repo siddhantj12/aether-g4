@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: macos-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,6 +30,12 @@ jobs:
 
       - name: Build Tauri app
         run: npm run tauri:build
+
+      - name: Upload DMG artifact (fallback)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Aether-dmg
+          path: src-tauri/target/release/bundle/dmg/*.dmg
 
       - name: Upload DMG to release
         uses: softprops/action-gh-release@v2
