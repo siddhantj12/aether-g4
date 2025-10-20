@@ -105,6 +105,15 @@ export function PreferencesModal({ open, onClose }: PreferencesModalProps) {
                   className="w-5 h-5 rounded bg-white/10 border-white/20 accent-[var(--color-phase-focus)]"
                 />
               </label>
+              <label className="flex items-center justify-between cursor-pointer">
+                <span className="text-sm text-white">Desktop notifications</span>
+                <input
+                  type="checkbox"
+                  checked={preferences.notificationEnabled}
+                  onChange={(e) => updatePreferences({ notificationEnabled: e.target.checked })}
+                  className="w-5 h-5 rounded bg-white/10 border-white/20 accent-[var(--color-phase-focus)]"
+                />
+              </label>
             </div>
           </div>
 
@@ -159,6 +168,20 @@ export function PreferencesModal({ open, onClose }: PreferencesModalProps) {
                       background: `linear-gradient(to right, var(--color-accent-cyan) 0%, var(--color-accent-cyan) ${preferences.backgroundMusicVolume * 100}%, rgba(255,255,255,0.1) ${preferences.backgroundMusicVolume * 100}%, rgba(255,255,255,0.1) 100%)`
                     }}
                   />
+                  <div className="mt-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="text-sm text-white">Music Preset</label>
+                    </div>
+                    <select
+                      value={preferences.backgroundMusicPreset}
+                      onChange={(e) => updatePreferences({ backgroundMusicPreset: e.target.value as any })}
+                      className="w-full px-3 py-2 rounded-lg glass-surface border border-white/20 text-white bg-transparent focus:outline-none focus:border-[var(--color-accent-cyan)]"
+                    >
+                      <option value="mellow">Mellow (major pad)</option>
+                      <option value="lofi">Lo-fi (warm detuned)</option>
+                      <option value="rain">Rain (soft noise)</option>
+                    </select>
+                  </div>
                 </div>
               )}
             </div>

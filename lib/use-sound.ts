@@ -171,51 +171,91 @@ export function useSound() {
     oscillator.stop(now + 0.05)
   }, [preferences.tickSoundEnabled])
 
-  // Background music - happy and mellow ambient tones
+  // Background music presets
   const startBackgroundMusic = useCallback(() => {
     if (!audioContextRef.current) {
       audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)()
     }
 
     const ctx = audioContextRef.current
-    
-    // Create ambient pad with bright major chord harmonics for a happy, mellow sound
-    const frequencies = [
-      261.63, // C4 - brighter, happier root
-      329.63, // E4 - major third
-      392.00, // G4 - perfect fifth
-      523.25, // C5 - octave up for shimmer
-    ]
-
     const oscillators: OscillatorNode[] = []
     const gains: GainNode[] = []
 
-    frequencies.forEach((freq, i) => {
-      const osc = ctx.createOscillator()
+    const connect = (node: AudioNode, gainValue: number) => {
       const gain = ctx.createGain()
-      const filter = ctx.createBiquadFilter()
-
-      osc.type = "sine"
-      osc.frequency.value = freq
-      
-      filter.type = "lowpass"
-      filter.frequency.value = 1200 // Brighter filter for happier tone
-      filter.Q.value = 0.7
-
-      // Much quieter - reduced volume
-      gain.gain.value = (preferences.backgroundMusicVolume * 0.08) / (i + 1)
-
-      osc.connect(filter)
-      filter.connect(gain)
+      gain.gain.value = gainValue
+      node.connect(gain)
       gain.connect(ctx.destination)
-
-      osc.start()
-      oscillators.push(osc)
       gains.push(gain)
-    })
+    }
+
+    if (preferences.backgroundMusicPreset === "mellow") {
+      const frequencies = [261.63, 329.63, 392.0, 523.25]
+      frequencies.forEach((freq, i) => {
+        const osc = ctx.createOscillator()
+        const filter = ctx.createBiquadFilter()
+        osc.type = "sine"
+        osc.frequency.value = freq
+        filter.type = "lowpass"
+        filter.frequency.value = 1000
+        filter.Q.value = 0.7
+        osc.connect(filter)
+        connect(filter, (preferences.backgroundMusicVolume * 0.08) / (i + 1))
+        osc.start()
+        oscillators.push(osc)
+      })
+    } else if (preferences.backgroundMusicPreset === "lofi") {
+      const osc1 = ctx.createOscillator()
+      const osc2 = ctx.createOscillator()
+      const lfo = ctx.createOscillator()
+      const lfoGain = ctx.createGain()
+      const filter = ctx.createBiquadFilter()
+      osc1.type = "triangle"
+      osc2.type = "triangle"
+      osc1.frequency.value = 220
+      osc2.frequency.value = 220 * 2
+      osc2.detune.value = -15
+      filter.type = "lowpass"
+      filter.frequency.value = 800
+      lfo.type = "sine"
+      lfo.frequency.value = 0.2
+      lfoGain.gain.value = 5
+      lfo.connect(lfoGain)
+      lfoGain.connect(osc1.detune)
+      lfoGain.connect(osc2.detune)
+      const mix = ctx.createGain()
+      mix.gain.value = 1
+      osc1.connect(mix)
+      osc2.connect(mix)
+      mix.connect(filter)
+      connect(filter, preferences.backgroundMusicVolume * 0.06)
+      osc1.start(); osc2.start(); lfo.start()
+      oscillators.push(osc1, osc2, lfo)
+    } else if (preferences.backgroundMusicPreset === "rain") {
+      const bufferSize = 2 * ctx.sampleRate
+      const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate)
+      const output = noiseBuffer.getChannelData(0)
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = (Math.random() * 2 - 1) * 0.6
+      }
+      const whiteNoise = ctx.createBufferSource()
+      whiteNoise.buffer = noiseBuffer
+      whiteNoise.loop = true
+      const hp = ctx.createBiquadFilter()
+      hp.type = "highpass"; hp.frequency.value = 400
+      const lp = ctx.createBiquadFilter()
+      lp.type = "lowpass"; lp.frequency.value = 6000
+      whiteNoise.connect(hp)
+      hp.connect(lp)
+      connect(lp, preferences.backgroundMusicVolume * 0.05)
+      whiteNoise.start()
+      // Use a dummy oscillator array entry to manage stop
+      // We'll stop by stopping the BufferSource via stored reference
+      oscillators.push((whiteNoise as unknown) as OscillatorNode)
+    }
 
     setBackgroundMusic({ oscillators, gains })
-  }, [preferences.backgroundMusicVolume])
+  }, [preferences.backgroundMusicVolume, preferences.backgroundMusicPreset])
 
   const stopBackgroundMusic = useCallback(() => {
     if (backgroundMusic) {
@@ -238,6 +278,13 @@ export function useSound() {
       stopBackgroundMusic()
     }
   }, [preferences.backgroundMusicEnabled, backgroundMusic, startBackgroundMusic, stopBackgroundMusic])
+
+  // Restart music when preset changes
+  useEffect(() => {
+    if (!preferences.backgroundMusicEnabled) return
+    stopBackgroundMusic()
+    startBackgroundMusic()
+  }, [preferences.backgroundMusicPreset])
 
   // Update volume when preference changes
   useEffect(() => {

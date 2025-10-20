@@ -1,6 +1,12 @@
 "use client"
 
 import { useState, useEffect, useRef, useCallback } from "react"
+let invokeRef: undefined | ((cmd: string, args?: any) => Promise<any>)
+try {
+  // Lazy import to avoid SSR issues
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  invokeRef = require("@tauri-apps/api/core").invoke
+} catch {}
 import { usePreferences } from "./use-preferences"
 import { useStats } from "./use-stats"
 import { useSound } from "./use-sound"
@@ -57,6 +63,21 @@ export function useTimer() {
     setTimeLeft(getDuration(newPhase))
 
     playChime()
+
+    // Native notification
+    const sendNotice = async (title: string, body: string) => {
+      if (!invokeRef) return
+      try {
+        await invokeRef("send_notification", { title, body })
+      } catch {}
+    }
+    if (preferences.notificationEnabled) {
+      if (phase === "focus") {
+        sendNotice("Aether", "Focus complete. Time for a break.")
+      } else if (phase === "break" || phase === "long") {
+        sendNotice("Aether", "Break over. Back to focus.")
+      }
+    }
 
     const shouldAutoStart = newPhase === "focus" ? preferences.autoStartFocus : preferences.autoStartBreaks
 

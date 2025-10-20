@@ -31,6 +31,9 @@
     "active": true,
     "targets": "all",
     "resources": [],
+    "icon": [
+      "icons/icon.png"
+    ],
     "copyright": "",
     "category": "Productivity",
     "shortDescription": "Aether - Your free companion",

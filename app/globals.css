@@ -83,28 +83,28 @@
   --color-surface: rgba(255, 255, 255, 0.03);
   --color-surface-hover: rgba(255, 255, 255, 0.08);
 
-  /* Bright white neon text with glow */
-  --color-foreground: #ffffff;
-  --color-foreground-secondary: rgba(255, 255, 255, 0.95);
-  --color-foreground-tertiary: rgba(255, 255, 255, 0.75);
+  /* Subtle matte foreground */
+  --color-foreground: #e7e7e7;
+  --color-foreground-secondary: rgba(231, 231, 231, 0.9);
+  --color-foreground-tertiary: rgba(231, 231, 231, 0.7);
 
-  /* More vibrant neon phase colors */
-  --color-phase-focus: #ff4d00;
-  --color-phase-focus-glow: rgba(255, 77, 0, 0.6);
-  --color-phase-break: #00ffcc;
-  --color-phase-break-glow: rgba(0, 255, 204, 0.6);
-  --color-phase-long: #a855f7;
-  --color-phase-long-glow: rgba(168, 85, 247, 0.6);
+  /* Muted phase colors for matte look */
+  --color-phase-focus: #f97316; /* soft orange */
+  --color-phase-focus-glow: rgba(249, 115, 22, 0.25);
+  --color-phase-break: #4db6ac; /* muted teal */
+  --color-phase-break-glow: rgba(77, 182, 172, 0.25);
+  --color-phase-long: #8e8cd8; /* soft purple */
+  --color-phase-long-glow: rgba(142, 140, 216, 0.25);
 
-  /* Bright cyan neon for timer numbers */
-  --color-timer-display: #00f0ff;
-  --color-timer-glow: rgba(0, 240, 255, 0.8);
+  /* Softer timer display */
+  --color-timer-display: #d1d5db;
+  --color-timer-glow: rgba(209, 213, 219, 0.35);
 
-  /* Neon accent colors */
-  --color-accent-cyan: #00d9ff;
-  --color-accent-pink: #ff006e;
-  --color-accent-purple: #b537f2;
-  --color-accent-green: #39ff14;
+  /* Subtle accents */
+  --color-accent-cyan: #6fbac0;
+  --color-accent-pink: #f472b6;
+  --color-accent-purple: #9e8dde;
+  --color-accent-green: #86efac;
 
   --color-border: rgba(255, 255, 255, 0.15);
   --color-border-bright: rgba(255, 255, 255, 0.3);
@@ -226,16 +226,15 @@ body {
 /* Bright cyan neon glow for timer display */
 .timer-display-glow {
   color: var(--color-timer-display);
-  text-shadow: 0 0 20px var(--color-timer-glow), 0 0 40px var(--color-timer-glow), 0 0 60px var(--color-timer-glow), 0 0
-    80px var(--color-timer-glow);
+  text-shadow: 0 0 12px var(--color-timer-glow);
   font-weight: 300;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.02em;
 }
 
 /* White neon text glow */
 .text-neon-white {
-  color: #ffffff;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5);
+  color: #e7e7e7;
+  text-shadow: 0 0 6px rgba(231, 231, 231, 0.35);
 }
 
 /* Ensure all interactive elements are clickable */
