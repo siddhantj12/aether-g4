@@ -1,0 +1,45 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0.0",
+  "productName": "Flow",
+  "version": "1.0.0",
+  "identifier": "com.flow.pomodoro",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "devUrl": "http://localhost:3000",
+    "frontendDist": "../out"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Flow",
+        "width": 400,
+        "height": 600,
+        "resizable": false,
+        "fullscreen": false,
+        "decorations": true,
+        "alwaysOnTop": false,
+        "transparent": false,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    },
+    "trayIcon": {
+      "iconPath": "icons/icon.png",
+      "tooltip": "Flow Pomodoro"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+    "resources": [],
+    "copyright": "",
+    "category": "Productivity",
+    "shortDescription": "A minimal Pomodoro timer",
+    "longDescription": "Flow is a beautiful, minimal Pomodoro timer for macOS"
+  },
+  "plugins": {}
+}

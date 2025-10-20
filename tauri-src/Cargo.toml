@@ -1,0 +1,20 @@
+[package]
+name = "flow"
+version = "1.0.0"
+description = "A minimal Pomodoro timer"
+authors = ["you"]
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2.0", features = [] }
+
+[dependencies]
+tauri = { version = "2.0", features = ["macos-private-api", "system-tray"] }
+tauri-plugin-notification = "2.0"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+dirs = "5.0"
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
