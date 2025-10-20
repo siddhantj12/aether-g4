@@ -4,7 +4,7 @@ Matte-dark Pomodoro for macOS (Tauri + Next.js).
 
 ## Download
 
-- Download the latest `.dmg` from the GitHub Releases page of this repo.
+- Download the latest `.zip` from the GitHub Releases page of this repo.
 - On macOS, allow the app in System Settings → Privacy & Security if prompted.
 
 ## Notifications
