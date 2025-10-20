@@ -104,6 +104,13 @@ export function useTimer() {
     setTimeLeft(getDuration(phase))
   }
 
+  // Update timer when preferences change (only if not running)
+  useEffect(() => {
+    if (!isRunning) {
+      setTimeLeft(getDuration(phase))
+    }
+  }, [preferences.focusDuration, preferences.shortBreakDuration, preferences.longBreakDuration, phase, isRunning, getDuration])
+
   return {
     timeLeft,
     phase,
