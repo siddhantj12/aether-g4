@@ -7,7 +7,7 @@ import { MiniStats } from "./mini-stats"
 import { useTimer } from "@/lib/use-timer"
 
 export function TimerView() {
-  const { timeLeft, phase, isRunning, start, pause, reset, progress } = useTimer()
+  const { timeLeft, phase, isRunning, start, pause, reset, progress, startFocus } = useTimer()
 
   const minutes = Math.floor(timeLeft / 60)
   const seconds = timeLeft % 60
@@ -27,7 +27,7 @@ export function TimerView() {
         </div>
       </div>
 
-      <TimerControls isRunning={isRunning} onStart={start} onPause={pause} onReset={reset} />
+      <TimerControls isRunning={isRunning} onStart={start} onPause={pause} onReset={reset} onFocusStart={startFocus} />
 
       <MiniStats />
     </div>

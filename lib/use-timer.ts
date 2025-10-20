@@ -74,11 +74,21 @@ export function useTimer() {
 
     playChime()
 
-    // Native notification
+    // Native notification + web fallback
     const sendNotice = async (title: string, body: string) => {
       if (!invokeRef) return
       try {
         await invokeRef("send_notification", { title, body })
+      } catch {}
+      try {
+        if ("Notification" in window) {
+          if (Notification.permission === "granted") new Notification(title, { body })
+          else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then((p) => {
+              if (p === "granted") new Notification(title, { body })
+            })
+          }
+        }
       } catch {}
     }
     if (preferences.notificationEnabled) {
@@ -138,6 +148,13 @@ export function useTimer() {
     setTimeLeft(getDuration(phase))
   }
 
+  const startFocus = () => {
+    setPhase("focus")
+    setTimeLeft(getDuration("focus"))
+    setIsRunning(true)
+    playStart()
+  }
+
   // Update timer when preferences change - always update to reflect new duration
   useEffect(() => {
     // Reset to new duration regardless of running state
@@ -152,5 +169,6 @@ export function useTimer() {
     start,
     pause,
     reset,
+    startFocus,
   }
 }

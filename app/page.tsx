@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { TimerView } from "@/components/timer-view"
 import { StatsView } from "@/components/stats-view"
 import { PreferencesModal } from "@/components/preferences-modal"
@@ -13,6 +13,32 @@ export default function Home() {
   
   // Initialize sound system (including background music)
   useSound()
+
+  // Request native notification permissions (Tauri) with web fallback
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      try {
+        // Dynamically import to avoid SSR issues
+        const mod = await import("@tauri-apps/plugin-notification")
+        const granted = await mod.isPermissionGranted()
+        if (!granted && !cancelled) {
+          await mod.requestPermission()
+        }
+      } catch {
+        try {
+          if (typeof window !== "undefined" && "Notification" in window) {
+            if (Notification.permission === "default") {
+              await Notification.requestPermission()
+            }
+          }
+        } catch {}
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-4 relative">
