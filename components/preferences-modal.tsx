@@ -15,19 +15,19 @@ export function PreferencesModal({ open, onClose }: PreferencesModalProps) {
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xl"
       onClick={onClose}
       style={{ pointerEvents: 'auto' }}
     >
       <div 
-        className="w-full max-w-md rounded-3xl glass-surface-bright p-6 shadow-2xl"
+        className="w-full max-w-md rounded-3xl glass-surface p-5 border border-white/10 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
         style={{ pointerEvents: 'auto' }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-light text-neon-white">Preferences</h2>
-          <button onClick={onClose} className="p-2 rounded-lg hover:bg-white/10 transition-colors" aria-label="Close">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-light text-neon-white">Preferences</h2>
+          <button onClick={onClose} className="p-2 rounded-lg hover:bg-white/10 transition-colors border border-white/10" aria-label="Close">
             <X className="w-5 h-5 text-white/90" />
           </button>
         </div>
@@ -36,39 +36,39 @@ export function PreferencesModal({ open, onClose }: PreferencesModalProps) {
         <div className="space-y-6">
           {/* Durations */}
           <div>
-            <h3 className="text-sm font-medium text-white/90 mb-3">Durations (minutes)</h3>
-            <div className="space-y-3">
+            <h3 className="text-sm font-medium text-white/85 mb-2">Durations (minutes)</h3>
+            <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-sm text-white">Focus</label>
+                <label className="text-xs text-white/85">Focus</label>
                 <input
                   type="number"
                   min="1"
                   max="60"
                   value={preferences.focusDuration}
                   onChange={(e) => updatePreferences({ focusDuration: Number.parseInt(e.target.value) })}
-                  className="w-20 px-3 py-2 rounded-lg glass-surface border border-white/20 text-white text-center focus:outline-none focus:border-[var(--color-accent-cyan)]"
+                  className="w-24 px-3 py-2 rounded-lg glass-surface border border-white/15 text-white text-center focus:outline-none focus:border-white/30"
                 />
               </div>
               <div className="flex items-center justify-between">
-                <label className="text-sm text-white">Short Break</label>
+                <label className="text-xs text-white/85">Short Break</label>
                 <input
                   type="number"
                   min="1"
                   max="30"
                   value={preferences.shortBreakDuration}
                   onChange={(e) => updatePreferences({ shortBreakDuration: Number.parseInt(e.target.value) })}
-                  className="w-20 px-3 py-2 rounded-lg glass-surface border border-white/20 text-white text-center focus:outline-none focus:border-[var(--color-accent-cyan)]"
+                  className="w-24 px-3 py-2 rounded-lg glass-surface border border-white/15 text-white text-center focus:outline-none focus:border-white/30"
                 />
               </div>
               <div className="flex items-center justify-between">
-                <label className="text-sm text-white">Long Break</label>
+                <label className="text-xs text-white/85">Long Break</label>
                 <input
                   type="number"
                   min="1"
                   max="60"
                   value={preferences.longBreakDuration}
                   onChange={(e) => updatePreferences({ longBreakDuration: Number.parseInt(e.target.value) })}
-                  className="w-20 px-3 py-2 rounded-lg glass-surface border border-white/20 text-white text-center focus:outline-none focus:border-[var(--color-accent-cyan)]"
+                  className="w-24 px-3 py-2 rounded-lg glass-surface border border-white/15 text-white text-center focus:outline-none focus:border-white/30"
                 />
               </div>
             </div>
@@ -76,42 +76,42 @@ export function PreferencesModal({ open, onClose }: PreferencesModalProps) {
 
           {/* Options */}
           <div>
-            <h3 className="text-sm font-medium text-white/90 mb-3">Options</h3>
-            <div className="space-y-3">
+            <h3 className="text-sm font-medium text-white/85 mb-2">Options</h3>
+            <div className="space-y-2">
               <label className="flex items-center justify-between cursor-pointer">
-                <span className="text-sm text-white">Auto-start breaks</span>
+                <span className="text-xs text-white/85">Auto-start breaks</span>
                 <input
                   type="checkbox"
                   checked={preferences.autoStartBreaks}
                   onChange={(e) => updatePreferences({ autoStartBreaks: e.target.checked })}
-                  className="w-5 h-5 rounded bg-white/10 border-white/20 accent-[var(--color-phase-focus)]"
+                  className="w-5 h-5 rounded bg-white/10 border-white/15 accent-[var(--color-phase-focus)]"
                 />
               </label>
               <label className="flex items-center justify-between cursor-pointer">
-                <span className="text-sm text-white">Auto-start focus</span>
+                <span className="text-xs text-white/85">Auto-start focus</span>
                 <input
                   type="checkbox"
                   checked={preferences.autoStartFocus}
                   onChange={(e) => updatePreferences({ autoStartFocus: e.target.checked })}
-                  className="w-5 h-5 rounded bg-white/10 border-white/20 accent-[var(--color-phase-focus)]"
+                  className="w-5 h-5 rounded bg-white/10 border-white/15 accent-[var(--color-phase-focus)]"
                 />
               </label>
               <label className="flex items-center justify-between cursor-pointer">
-                <span className="text-sm text-white">Sound notifications</span>
+                <span className="text-xs text-white/85">Sound notifications</span>
                 <input
                   type="checkbox"
                   checked={preferences.soundEnabled}
                   onChange={(e) => updatePreferences({ soundEnabled: e.target.checked })}
-                  className="w-5 h-5 rounded bg-white/10 border-white/20 accent-[var(--color-phase-focus)]"
+                  className="w-5 h-5 rounded bg-white/10 border-white/15 accent-[var(--color-phase-focus)]"
                 />
               </label>
               <label className="flex items-center justify-between cursor-pointer">
-                <span className="text-sm text-white">Desktop notifications</span>
+                <span className="text-xs text-white/85">Desktop notifications</span>
                 <input
                   type="checkbox"
                   checked={preferences.notificationEnabled}
                   onChange={(e) => updatePreferences({ notificationEnabled: e.target.checked })}
-                  className="w-5 h-5 rounded bg-white/10 border-white/20 accent-[var(--color-phase-focus)]"
+                  className="w-5 h-5 rounded bg-white/10 border-white/15 accent-[var(--color-phase-focus)]"
                 />
               </label>
             </div>
@@ -119,11 +119,11 @@ export function PreferencesModal({ open, onClose }: PreferencesModalProps) {
 
           {/* Audio Settings */}
           <div>
-            <h3 className="text-sm font-medium text-white/90 mb-3">Audio</h3>
+            <h3 className="text-sm font-medium text-white/85 mb-2">Audio</h3>
             <div className="space-y-4">
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="text-sm text-white">Sound Volume</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs text-white/85">Sound Volume</label>
                   <span className="text-xs text-white/60">{Math.round(preferences.soundVolume * 100)}%</span>
                 </div>
                 <input
@@ -148,7 +148,7 @@ export function PreferencesModal({ open, onClose }: PreferencesModalProps) {
         {/* Footer */}
         <button
           onClick={onClose}
-          className="w-full mt-6 px-4 py-3 rounded-xl bg-[var(--color-phase-focus)] hover:opacity-90 text-white font-medium transition-opacity shadow-[0_0_20px_var(--color-phase-focus-glow)]"
+          className="w-full mt-5 px-4 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-medium transition-colors border border-white/15"
         >
           Save Changes
         </button>

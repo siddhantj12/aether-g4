@@ -15,6 +15,15 @@ export function useStats() {
 
   useEffect(() => {
     loadStats()
+    const onUpdated = () => loadStats()
+    if (typeof window !== "undefined") {
+      window.addEventListener("aether-stats-updated", onUpdated)
+    }
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("aether-stats-updated", onUpdated)
+      }
+    }
   }, [])
 
   const loadStats = () => {
@@ -64,6 +73,51 @@ export function useStats() {
     setTodayPomodoros(todayStats.pomodoros)
     setTodayMinutes(todayStats.minutes)
     loadStats()
+    try { window.dispatchEvent(new Event("aether-stats-updated")) } catch {}
+  }
+
+  const addMinutes = (delta: number) => {
+    if (!delta || delta <= 0) return
+    const today = new Date().toDateString()
+    const stored = localStorage.getItem("aether-stats") || localStorage.getItem("flow-stats")
+    const stats = stored ? JSON.parse(stored) : {}
+    const todayStats = stats[today] || { pomodoros: 0, minutes: 0 }
+    todayStats.minutes = (todayStats.minutes || 0) + delta
+    stats[today] = todayStats
+    localStorage.setItem("aether-stats", JSON.stringify(stats))
+
+    setTodayPomodoros(todayStats.pomodoros)
+    setTodayMinutes(todayStats.minutes)
+    loadStats()
+    try { window.dispatchEvent(new Event("aether-stats-updated")) } catch {}
+  }
+
+  const resetStats = () => {
+    try {
+      localStorage.removeItem("aether-stats")
+      setTodayPomodoros(0)
+      setTodayMinutes(0)
+      setWeeklyData([])
+      loadStats()
+      try { window.dispatchEvent(new Event("aether-stats-updated")) } catch {}
+    } catch {}
+  }
+
+  const getRangeData = (daysBack: number): DayStats[] => {
+    const result: DayStats[] = []
+    const stored = localStorage.getItem("aether-stats") || localStorage.getItem("flow-stats")
+    const stats = stored ? JSON.parse(stored) : {}
+
+    for (let i = daysBack - 1; i >= 0; i--) {
+      const date = new Date()
+      date.setDate(date.getDate() - i)
+      const dateStr = date.toDateString()
+      const dayLabel = date.toLocaleDateString(undefined, { weekday: "short" })
+      const dayStats = stats[dateStr] || { pomodoros: 0, minutes: 0 }
+      result.push({ day: dayLabel, minutes: dayStats.minutes || 0, pomodoros: dayStats.pomodoros || 0 })
+    }
+
+    return result
   }
 
   const weekTotal = weeklyData.reduce((sum, day) => sum + day.minutes, 0)
@@ -74,5 +128,8 @@ export function useStats() {
     weeklyData,
     weekTotal,
     incrementPomodoro,
+    addMinutes,
+    getRangeData,
+    resetStats,
   }
 }

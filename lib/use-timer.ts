@@ -15,7 +15,7 @@ type Phase = "focus" | "break" | "long"
 
 export function useTimer() {
   const { preferences } = usePreferences()
-  const { incrementPomodoro } = useStats()
+  const { incrementPomodoro, addMinutes } = useStats()
   const { playChime, playStart, playPause, playTick } = useSound()
 
   const [phase, setPhase] = useState<Phase>("focus")
@@ -24,6 +24,7 @@ export function useTimer() {
   const [sessionCount, setSessionCount] = useState(0)
 
   const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined)
+  const transitioningRef = useRef<boolean>(false)
 
   const getDuration = useCallback(
     (currentPhase: Phase) => {
@@ -42,6 +43,8 @@ export function useTimer() {
   const progress = ((getDuration(phase) - timeLeft) / getDuration(phase)) * 100
 
   const nextPhase = useCallback(() => {
+    if (transitioningRef.current) return
+    transitioningRef.current = true
     let newPhase: Phase
     let newSessionCount = sessionCount
 
@@ -51,14 +54,8 @@ export function useTimer() {
       try {
         const secondsCompleted = getDuration("focus") - timeLeft
         const minutesCompleted = Math.round(secondsCompleted / 60)
-        const today = new Date().toDateString()
-        const stored = localStorage.getItem("aether-stats") || localStorage.getItem("flow-stats")
-        const stats = stored ? JSON.parse(stored) : {}
-        const todayStats = stats[today] || { pomodoros: 0, minutes: 0 }
-        todayStats.pomodoros += 1
-        todayStats.minutes = (todayStats.minutes || 0) + minutesCompleted
-        stats[today] = todayStats
-        localStorage.setItem("aether-stats", JSON.stringify(stats))
+        addMinutes(minutesCompleted)
+        incrementPomodoro()
       } catch {}
 
       if (newSessionCount % 4 === 0) {
@@ -106,6 +103,10 @@ export function useTimer() {
     if (!shouldAutoStart) {
       setIsRunning(false)
     }
+    // release transition lock shortly after state updates flush
+    setTimeout(() => {
+      transitioningRef.current = false
+    }, 100)
   }, [phase, sessionCount, getDuration, incrementPomodoro, playChime, preferences])
 
   useEffect(() => {
@@ -113,6 +114,11 @@ export function useTimer() {
       intervalRef.current = setInterval(() => {
         setTimeLeft((prev) => {
           if (prev <= 1) {
+            // stop interval before transitioning to avoid double increments
+            if (intervalRef.current) {
+              clearInterval(intervalRef.current)
+              intervalRef.current = undefined
+            }
             nextPhase()
             return getDuration(phase)
           }
