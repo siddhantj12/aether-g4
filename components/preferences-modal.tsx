@@ -99,6 +99,62 @@ export function PreferencesModal({ open, onClose }: PreferencesModalProps) {
               </label>
             </div>
           </div>
+
+          {/* Audio Settings */}
+          <div>
+            <h3 className="text-sm font-medium text-white/90 mb-3">Audio</h3>
+            <div className="space-y-4">
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-sm text-white">Sound Volume</label>
+                  <span className="text-xs text-white/60">{Math.round(preferences.soundVolume * 100)}%</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.1"
+                  value={preferences.soundVolume}
+                  onChange={(e) => updatePreferences({ soundVolume: Number.parseFloat(e.target.value) })}
+                  className="w-full h-2 rounded-lg appearance-none cursor-pointer"
+                  style={{
+                    background: `linear-gradient(to right, var(--color-accent-cyan) 0%, var(--color-accent-cyan) ${preferences.soundVolume * 100}%, rgba(255,255,255,0.1) ${preferences.soundVolume * 100}%, rgba(255,255,255,0.1) 100%)`
+                  }}
+                />
+              </div>
+              
+              <label className="flex items-center justify-between cursor-pointer">
+                <span className="text-sm text-white">Background Music</span>
+                <input
+                  type="checkbox"
+                  checked={preferences.backgroundMusicEnabled}
+                  onChange={(e) => updatePreferences({ backgroundMusicEnabled: e.target.checked })}
+                  className="w-5 h-5 rounded bg-white/10 border-white/20 accent-[var(--color-phase-focus)]"
+                />
+              </label>
+              
+              {preferences.backgroundMusicEnabled && (
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-sm text-white">Music Volume</label>
+                    <span className="text-xs text-white/60">{Math.round(preferences.backgroundMusicVolume * 100)}%</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    value={preferences.backgroundMusicVolume}
+                    onChange={(e) => updatePreferences({ backgroundMusicVolume: Number.parseFloat(e.target.value) })}
+                    className="w-full h-2 rounded-lg appearance-none cursor-pointer"
+                    style={{
+                      background: `linear-gradient(to right, var(--color-accent-cyan) 0%, var(--color-accent-cyan) ${preferences.backgroundMusicVolume * 100}%, rgba(255,255,255,0.1) ${preferences.backgroundMusicVolume * 100}%, rgba(255,255,255,0.1) 100%)`
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Footer */}

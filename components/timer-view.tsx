@@ -13,7 +13,7 @@ export function TimerView() {
   const seconds = timeLeft % 60
 
   return (
-    <div className="flex flex-col items-center gap-8">
+    <div className="flex flex-col items-center gap-8 mt-20">
       <PhaseChip phase={phase} />
 
       <div className="relative">

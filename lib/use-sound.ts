@@ -1,11 +1,15 @@
 "use client"
 
 import { usePreferences } from "./use-preferences"
-import { useRef, useCallback } from "react"
+import { useRef, useCallback, useEffect, useState } from "react"
 
 export function useSound() {
   const { preferences } = usePreferences()
   const audioContextRef = useRef<AudioContext | null>(null)
+  const [backgroundMusic, setBackgroundMusic] = useState<{
+    oscillators: OscillatorNode[]
+    gains: GainNode[]
+  } | null>(null)
 
   const playChime = useCallback(() => {
     if (!preferences.soundEnabled) return
@@ -60,22 +64,39 @@ export function useSound() {
     const ctx = audioContextRef.current
     const now = ctx.currentTime
 
-    const oscillator = ctx.createOscillator()
+    // Professional ascending sound with harmonics
+    const osc1 = ctx.createOscillator()
+    const osc2 = ctx.createOscillator()
     const gainNode = ctx.createGain()
+    const filter = ctx.createBiquadFilter()
 
-    oscillator.frequency.setValueAtTime(400, now)
-    oscillator.frequency.exponentialRampToValueAtTime(600, now + 0.1)
-    oscillator.type = "sine"
+    // Smooth frequency sweep
+    osc1.frequency.setValueAtTime(329.63, now) // E4
+    osc1.frequency.exponentialRampToValueAtTime(523.25, now + 0.3) // C5
+    osc2.frequency.setValueAtTime(392.00, now) // G4
+    osc2.frequency.exponentialRampToValueAtTime(659.25, now + 0.3) // E5
+    
+    osc1.type = "sine"
+    osc2.type = "sine"
 
-    oscillator.connect(gainNode)
+    filter.type = "lowpass"
+    filter.frequency.value = 2000
+    filter.Q.value = 1
+
+    osc1.connect(filter)
+    osc2.connect(filter)
+    filter.connect(gainNode)
     gainNode.connect(ctx.destination)
 
+    // Smooth, professional envelope - longer
     gainNode.gain.setValueAtTime(0, now)
-    gainNode.gain.linearRampToValueAtTime(0.3 * preferences.soundVolume, now + 0.01)
-    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.2)
+    gainNode.gain.linearRampToValueAtTime(0.2 * preferences.soundVolume, now + 0.05)
+    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5)
 
-    oscillator.start(now)
-    oscillator.stop(now + 0.2)
+    osc1.start(now)
+    osc2.start(now)
+    osc1.stop(now + 0.5)
+    osc2.stop(now + 0.5)
   }, [preferences.soundEnabled, preferences.soundVolume])
 
   const playPause = useCallback(() => {
@@ -88,22 +109,39 @@ export function useSound() {
     const ctx = audioContextRef.current
     const now = ctx.currentTime
 
-    const oscillator = ctx.createOscillator()
+    // Professional descending sound with harmonics
+    const osc1 = ctx.createOscillator()
+    const osc2 = ctx.createOscillator()
     const gainNode = ctx.createGain()
+    const filter = ctx.createBiquadFilter()
 
-    oscillator.frequency.setValueAtTime(600, now)
-    oscillator.frequency.exponentialRampToValueAtTime(400, now + 0.1)
-    oscillator.type = "sine"
+    // Smooth frequency sweep down
+    osc1.frequency.setValueAtTime(523.25, now) // C5
+    osc1.frequency.exponentialRampToValueAtTime(329.63, now + 0.3) // E4
+    osc2.frequency.setValueAtTime(659.25, now) // E5
+    osc2.frequency.exponentialRampToValueAtTime(392.00, now + 0.3) // G4
+    
+    osc1.type = "sine"
+    osc2.type = "sine"
 
-    oscillator.connect(gainNode)
+    filter.type = "lowpass"
+    filter.frequency.value = 2000
+    filter.Q.value = 1
+
+    osc1.connect(filter)
+    osc2.connect(filter)
+    filter.connect(gainNode)
     gainNode.connect(ctx.destination)
 
+    // Smooth, professional envelope - longer
     gainNode.gain.setValueAtTime(0, now)
-    gainNode.gain.linearRampToValueAtTime(0.3 * preferences.soundVolume, now + 0.01)
-    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.2)
+    gainNode.gain.linearRampToValueAtTime(0.2 * preferences.soundVolume, now + 0.05)
+    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5)
 
-    oscillator.start(now)
-    oscillator.stop(now + 0.2)
+    osc1.start(now)
+    osc2.start(now)
+    osc1.stop(now + 0.5)
+    osc2.stop(now + 0.5)
   }, [preferences.soundEnabled, preferences.soundVolume])
 
   const playTick = useCallback(() => {
@@ -133,5 +171,82 @@ export function useSound() {
     oscillator.stop(now + 0.05)
   }, [preferences.tickSoundEnabled])
 
-  return { playChime, playTick, playStart, playPause }
+  // Background music - happy and mellow ambient tones
+  const startBackgroundMusic = useCallback(() => {
+    if (!audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)()
+    }
+
+    const ctx = audioContextRef.current
+    
+    // Create ambient pad with bright major chord harmonics for a happy, mellow sound
+    const frequencies = [
+      261.63, // C4 - brighter, happier root
+      329.63, // E4 - major third
+      392.00, // G4 - perfect fifth
+      523.25, // C5 - octave up for shimmer
+    ]
+
+    const oscillators: OscillatorNode[] = []
+    const gains: GainNode[] = []
+
+    frequencies.forEach((freq, i) => {
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      const filter = ctx.createBiquadFilter()
+
+      osc.type = "sine"
+      osc.frequency.value = freq
+      
+      filter.type = "lowpass"
+      filter.frequency.value = 1200 // Brighter filter for happier tone
+      filter.Q.value = 0.7
+
+      // Much quieter - reduced volume
+      gain.gain.value = (preferences.backgroundMusicVolume * 0.08) / (i + 1)
+
+      osc.connect(filter)
+      filter.connect(gain)
+      gain.connect(ctx.destination)
+
+      osc.start()
+      oscillators.push(osc)
+      gains.push(gain)
+    })
+
+    setBackgroundMusic({ oscillators, gains })
+  }, [preferences.backgroundMusicVolume])
+
+  const stopBackgroundMusic = useCallback(() => {
+    if (backgroundMusic) {
+      backgroundMusic.oscillators.forEach((osc) => {
+        try {
+          osc.stop()
+        } catch (e) {
+          // Already stopped
+        }
+      })
+      setBackgroundMusic(null)
+    }
+  }, [backgroundMusic])
+
+  // Control background music based on preferences
+  useEffect(() => {
+    if (preferences.backgroundMusicEnabled && !backgroundMusic) {
+      startBackgroundMusic()
+    } else if (!preferences.backgroundMusicEnabled && backgroundMusic) {
+      stopBackgroundMusic()
+    }
+  }, [preferences.backgroundMusicEnabled, backgroundMusic, startBackgroundMusic, stopBackgroundMusic])
+
+  // Update volume when preference changes
+  useEffect(() => {
+    if (backgroundMusic) {
+      backgroundMusic.gains.forEach((gain, i) => {
+        gain.gain.value = (preferences.backgroundMusicVolume * 0.08) / (i + 1)
+      })
+    }
+  }, [preferences.backgroundMusicVolume, backgroundMusic])
+
+  return { playChime, playTick, playStart, playPause, startBackgroundMusic, stopBackgroundMusic }
 }

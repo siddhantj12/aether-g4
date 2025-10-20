@@ -1,0 +1,40 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0.0",
+  "productName": "Aether",
+  "version": "1.0.0",
+  "identifier": "com.aether.timer",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "devUrl": "http://localhost:3000",
+    "frontendDist": "../out"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Aether",
+        "width": 480,
+        "height": 720,
+        "resizable": true,
+        "fullscreen": false,
+        "decorations": true,
+        "alwaysOnTop": false,
+        "transparent": false,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "resources": [],
+    "copyright": "",
+    "category": "Productivity",
+    "shortDescription": "Aether - Your free companion",
+    "longDescription": "Aether is a beautiful, minimal focus timer for macOS"
+  },
+  "plugins": {}
+}

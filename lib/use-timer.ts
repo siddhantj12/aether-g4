@@ -17,7 +17,7 @@ export function useTimer() {
   const [isRunning, setIsRunning] = useState(false)
   const [sessionCount, setSessionCount] = useState(0)
 
-  const intervalRef = useRef<NodeJS.Timeout>()
+  const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
   const getDuration = useCallback(
     (currentPhase: Phase) => {

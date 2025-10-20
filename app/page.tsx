@@ -4,11 +4,15 @@ import { useState } from "react"
 import { TimerView } from "@/components/timer-view"
 import { StatsView } from "@/components/stats-view"
 import { PreferencesModal } from "@/components/preferences-modal"
+import { useSound } from "@/lib/use-sound"
 import { Settings, BarChart3 } from "lucide-react"
 
 export default function Home() {
   const [view, setView] = useState<"timer" | "stats">("timer")
   const [prefsOpen, setPrefsOpen] = useState(false)
+  
+  // Initialize sound system (including background music)
+  useSound()
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-4 relative">

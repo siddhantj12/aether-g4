@@ -9,6 +9,10 @@ interface Preferences {
   autoStartBreaks: boolean
   autoStartFocus: boolean
   soundEnabled: boolean
+  soundVolume: number
+  tickSoundEnabled: boolean
+  backgroundMusicEnabled: boolean
+  backgroundMusicVolume: number
 }
 
 const defaultPreferences: Preferences = {
@@ -18,6 +22,10 @@ const defaultPreferences: Preferences = {
   autoStartBreaks: false,
   autoStartFocus: false,
   soundEnabled: true,
+  soundVolume: 1,
+  tickSoundEnabled: false,
+  backgroundMusicEnabled: true,
+  backgroundMusicVolume: 0.2,
 }
 
 export function usePreferences() {
