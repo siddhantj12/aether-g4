@@ -31,8 +31,26 @@ jobs:
       - name: Build Tauri app
         run: npm run tauri:build
 
-      - name: Zip Aether.app
-        run: cd src-tauri/target/release/bundle/macos && /usr/bin/zip -qry Aether.app.zip Aether.app
+      - name: Zip Aether.app (ditto)
+        run: ditto -c -k --sequesterRsrc --keepParent src-tauri/target/release/bundle/macos/Aether.app src-tauri/target/release/bundle/macos/Aether.app.zip
+
+      - name: Create release notes
+        run: |
+          cat > release-notes.md << 'EOF'
+          Aether for macOS
+
+          Install without Apple Developer ID (one-time Gatekeeper bypass):
+          1) Download Aether.app.zip or the DMG
+          2) Drag Aether.app to Applications
+          3) Right-click Aether.app → Open → Open
+
+          If macOS still shows “app is damaged”, run this in Terminal:
+          xattr -dr com.apple.quarantine "/Applications/Aether.app"
+
+          Notes:
+          - The app is not notarized. Bypass is safe and only needed once
+          - For seamless open without prompts, the app must be signed/notarized
+          EOF
 
       - name: Upload DMG artifact (fallback)
         uses: actions/upload-artifact@v4
@@ -52,6 +70,7 @@ jobs:
           files: |
             src-tauri/target/release/bundle/dmg/*.dmg
             src-tauri/target/release/bundle/macos/Aether.app.zip
+          body_path: release-notes.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
