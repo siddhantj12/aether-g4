@@ -177,10 +177,17 @@ export function PreferencesModal({ open, onClose }: PreferencesModalProps) {
                       onChange={(e) => updatePreferences({ backgroundMusicPreset: e.target.value as any })}
                       className="w-full px-3 py-2 rounded-lg glass-surface border border-white/20 text-white bg-transparent focus:outline-none focus:border-[var(--color-accent-cyan)]"
                     >
+                      <option value="off">Off</option>
                       <option value="mellow">Mellow (major pad)</option>
                       <option value="lofi">Lo-fi (warm detuned)</option>
                       <option value="rain">Rain (soft noise)</option>
                     </select>
+                    <button
+                      onClick={() => updatePreferences({ backgroundMusicEnabled: false })}
+                      className="mt-3 w-full px-3 py-2 rounded-lg bg-white/10 hover:bg-white/15 transition-colors text-white"
+                    >
+                      Stop Music
+                    </button>
                   </div>
                 </div>
               )}

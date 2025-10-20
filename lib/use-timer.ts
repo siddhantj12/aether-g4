@@ -16,7 +16,7 @@ type Phase = "focus" | "break" | "long"
 export function useTimer() {
   const { preferences } = usePreferences()
   const { incrementPomodoro } = useStats()
-  const { playChime, playStart, playPause } = useSound()
+  const { playChime, playStart, playPause, playTick } = useSound()
 
   const [phase, setPhase] = useState<Phase>("focus")
   const [timeLeft, setTimeLeft] = useState(preferences.focusDuration * 60)
@@ -48,6 +48,16 @@ export function useTimer() {
     if (phase === "focus") {
       newSessionCount += 1
       incrementPomodoro()
+      // Add actual minutes based on focusDuration into stats
+      try {
+        const today = new Date().toDateString()
+        const stored = localStorage.getItem("aether-stats") || localStorage.getItem("flow-stats")
+        const stats = stored ? JSON.parse(stored) : {}
+        const todayStats = stats[today] || { pomodoros: 0, minutes: 0 }
+        todayStats.minutes = (todayStats.minutes || 0) + preferences.focusDuration
+        stats[today] = todayStats
+        localStorage.setItem("aether-stats", JSON.stringify(stats))
+      } catch {}
 
       if (newSessionCount % 4 === 0) {
         newPhase = "long"
@@ -94,6 +104,9 @@ export function useTimer() {
             nextPhase()
             return getDuration(phase)
           }
+          if (preferences.tickSoundEnabled) {
+            playTick()
+          }
           return prev - 1
         })
       }, 1000)
@@ -108,7 +121,7 @@ export function useTimer() {
         clearInterval(intervalRef.current)
       }
     }
-  }, [isRunning, timeLeft, phase, getDuration, nextPhase])
+  }, [isRunning, timeLeft, phase, getDuration, nextPhase, preferences.tickSoundEnabled, playTick])
 
   const start = () => {
     setIsRunning(true)

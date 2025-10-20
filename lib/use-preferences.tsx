@@ -13,7 +13,7 @@ export interface Preferences {
   tickSoundEnabled: boolean
   backgroundMusicEnabled: boolean
   backgroundMusicVolume: number
-  backgroundMusicPreset: "mellow" | "lofi" | "rain"
+  backgroundMusicPreset: "off" | "mellow" | "lofi" | "rain"
   notificationEnabled: boolean
 }
 
@@ -29,9 +29,9 @@ const defaultPreferences: Preferences = {
   soundEnabled: true,
   soundVolume: 1,
   tickSoundEnabled: false,
-  backgroundMusicEnabled: true,
+  backgroundMusicEnabled: false,
   backgroundMusicVolume: 0.2,
-  backgroundMusicPreset: "mellow",
+  backgroundMusicPreset: "off",
   notificationEnabled: true,
 }
 

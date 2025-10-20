@@ -19,7 +19,7 @@ export function useStats() {
 
   const loadStats = () => {
     const today = new Date().toDateString()
-    const stored = localStorage.getItem("flow-stats")
+    const stored = localStorage.getItem("aether-stats") || localStorage.getItem("flow-stats")
 
     if (stored) {
       const stats = JSON.parse(stored)
@@ -35,7 +35,7 @@ export function useStats() {
       date.setDate(date.getDate() - date.getDay() + i)
       const dateStr = date.toDateString()
 
-      const stored = localStorage.getItem("flow-stats")
+      const stored = localStorage.getItem("aether-stats") || localStorage.getItem("flow-stats")
       const stats = stored ? JSON.parse(stored) : {}
       const dayStats = stats[dateStr] || { pomodoros: 0, minutes: 0 }
 
@@ -51,15 +51,15 @@ export function useStats() {
 
   const incrementPomodoro = () => {
     const today = new Date().toDateString()
-    const stored = localStorage.getItem("flow-stats")
+    const stored = localStorage.getItem("aether-stats") || localStorage.getItem("flow-stats")
     const stats = stored ? JSON.parse(stored) : {}
 
     const todayStats = stats[today] || { pomodoros: 0, minutes: 0 }
     todayStats.pomodoros += 1
-    todayStats.minutes += 25 // Default focus duration
+    // Minutes will be added by the caller based on actual focus duration
 
     stats[today] = todayStats
-    localStorage.setItem("flow-stats", JSON.stringify(stats))
+    localStorage.setItem("aether-stats", JSON.stringify(stats))
 
     setTodayPomodoros(todayStats.pomodoros)
     setTodayMinutes(todayStats.minutes)

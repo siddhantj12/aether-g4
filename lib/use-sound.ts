@@ -272,12 +272,13 @@ export function useSound() {
 
   // Control background music based on preferences
   useEffect(() => {
-    if (preferences.backgroundMusicEnabled && !backgroundMusic) {
+    const musicOff = !preferences.backgroundMusicEnabled || preferences.backgroundMusicPreset === "off"
+    if (!musicOff && !backgroundMusic) {
       startBackgroundMusic()
-    } else if (!preferences.backgroundMusicEnabled && backgroundMusic) {
+    } else if (musicOff && backgroundMusic) {
       stopBackgroundMusic()
     }
-  }, [preferences.backgroundMusicEnabled, backgroundMusic, startBackgroundMusic, stopBackgroundMusic])
+  }, [preferences.backgroundMusicEnabled, preferences.backgroundMusicPreset, backgroundMusic, startBackgroundMusic, stopBackgroundMusic])
 
   // Restart music when preset changes
   useEffect(() => {
