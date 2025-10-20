@@ -7,7 +7,8 @@ export function StatsView() {
   const { getRangeData, todayPomodoros, todayMinutes, resetStats } = useStats()
   const [range] = useState<7>(7)
   const [selected, setSelected] = useState<number | null>(null)
-  const data = useMemo(() => getRangeData(7), [getRangeData])
+  const [version, setVersion] = useState(0)
+  const data = useMemo(() => getRangeData(7), [getRangeData, version])
   const maxMinutes = useMemo(() => Math.max(...data.map((d) => d.minutes), 1), [data])
   const totalMinutes = useMemo(() => data.reduce((s, d) => s + d.minutes, 0), [data])
   const totalPomodoros = useMemo(() => data.reduce((s, d) => s + d.pomodoros, 0), [data])
@@ -41,7 +42,7 @@ export function StatsView() {
         <div className="ml-auto flex items-center gap-2">
           <div className="text-sm text-white/70">Pomodoros: {totalPomodoros}</div>
           <button
-            onClick={resetStats}
+            onClick={() => { setSelected(null); resetStats(); setVersion((v) => v + 1) }}
             className="px-3 py-1 rounded-lg text-sm bg-white/5 hover:bg-white/10 border border-white/10"
           >
             Reset

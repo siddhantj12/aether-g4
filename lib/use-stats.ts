@@ -14,6 +14,15 @@ export function useStats() {
   const [weeklyData, setWeeklyData] = useState<DayStats[]>([])
 
   useEffect(() => {
+    // One-time migration from legacy key
+    try {
+      const old = localStorage.getItem("flow-stats")
+      const curr = localStorage.getItem("aether-stats")
+      if (!curr && old) {
+        localStorage.setItem("aether-stats", old)
+        localStorage.removeItem("flow-stats")
+      }
+    } catch {}
     loadStats()
     const onUpdated = () => loadStats()
     if (typeof window !== "undefined") {
@@ -28,7 +37,7 @@ export function useStats() {
 
   const loadStats = () => {
     const today = new Date().toDateString()
-    const stored = localStorage.getItem("aether-stats") || localStorage.getItem("flow-stats")
+    const stored = localStorage.getItem("aether-stats")
 
     if (stored) {
       const stats = JSON.parse(stored)
@@ -44,7 +53,7 @@ export function useStats() {
       date.setDate(date.getDate() - date.getDay() + i)
       const dateStr = date.toDateString()
 
-      const stored = localStorage.getItem("aether-stats") || localStorage.getItem("flow-stats")
+      const stored = localStorage.getItem("aether-stats")
       const stats = stored ? JSON.parse(stored) : {}
       const dayStats = stats[dateStr] || { pomodoros: 0, minutes: 0 }
 
@@ -60,7 +69,7 @@ export function useStats() {
 
   const incrementPomodoro = () => {
     const today = new Date().toDateString()
-    const stored = localStorage.getItem("aether-stats") || localStorage.getItem("flow-stats")
+    const stored = localStorage.getItem("aether-stats")
     const stats = stored ? JSON.parse(stored) : {}
 
     const todayStats = stats[today] || { pomodoros: 0, minutes: 0 }
@@ -79,7 +88,7 @@ export function useStats() {
   const addMinutes = (delta: number) => {
     if (!delta || delta <= 0) return
     const today = new Date().toDateString()
-    const stored = localStorage.getItem("aether-stats") || localStorage.getItem("flow-stats")
+    const stored = localStorage.getItem("aether-stats")
     const stats = stored ? JSON.parse(stored) : {}
     const todayStats = stats[today] || { pomodoros: 0, minutes: 0 }
     todayStats.minutes = (todayStats.minutes || 0) + delta
@@ -95,6 +104,7 @@ export function useStats() {
   const resetStats = () => {
     try {
       localStorage.removeItem("aether-stats")
+      localStorage.removeItem("flow-stats")
       setTodayPomodoros(0)
       setTodayMinutes(0)
       setWeeklyData([])
@@ -105,7 +115,7 @@ export function useStats() {
 
   const getRangeData = (daysBack: number): DayStats[] => {
     const result: DayStats[] = []
-    const stored = localStorage.getItem("aether-stats") || localStorage.getItem("flow-stats")
+    const stored = localStorage.getItem("aether-stats")
     const stats = stored ? JSON.parse(stored) : {}
 
     for (let i = daysBack - 1; i >= 0; i--) {
