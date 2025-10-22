@@ -47,6 +47,10 @@ jobs:
           If macOS still shows “app is damaged”, run this in Terminal:
           xattr -dr com.apple.quarantine "/Applications/Aether.app"
 
+          Homebrew (bypass quarantine automatically):
+            brew tap siddhantj12/aether-g4 https://github.com/siddhantj12/aether-g4
+            brew install --cask --no-quarantine aether
+
           Notes:
           - The app is not notarized. Bypass is safe and only needed once
           - For seamless open without prompts, the app must be signed/notarized

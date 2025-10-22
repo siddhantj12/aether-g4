@@ -139,6 +139,15 @@ export function PreferencesModal({ open, onClose }: PreferencesModalProps) {
                   }}
                 />
               </div>
+              <label className="flex items-center justify-between cursor-pointer">
+                <span className="text-xs text-white/85">Per-second tick</span>
+                <input
+                  type="checkbox"
+                  checked={preferences.tickSoundEnabled}
+                  onChange={(e) => updatePreferences({ tickSoundEnabled: e.target.checked })}
+                  className="w-5 h-5 rounded bg-white/10 border-white/15 accent-[var(--color-phase-focus)]"
+                />
+              </label>
               
               {/* Background music removed */}
             </div>

@@ -16,7 +16,7 @@ type Phase = "focus" | "break" | "long"
 export function useTimer() {
   const { preferences } = usePreferences()
   const { incrementPomodoro, addMinutes } = useStats()
-  const { playChime, playStart, playPause, playTick } = useSound()
+  const { playChime, playStart, playPause, playTick, playPhaseChange } = useSound()
 
   const [phase, setPhase] = useState<Phase>("focus")
   const [timeLeft, setTimeLeft] = useState(preferences.focusDuration * 60)
@@ -71,7 +71,12 @@ export function useTimer() {
     setSessionCount(newSessionCount)
     setTimeLeft(getDuration(newPhase))
 
-    playChime()
+    // end-of-phase feedback
+    if (newPhase === "focus") {
+      playPhaseChange("focus")
+    } else {
+      playPhaseChange("break")
+    }
 
     // Native notification + web fallback
     const sendNotice = async (title: string, body: string) => {
